@@ -1,0 +1,29 @@
+CREATE DATABASE movies;
+CREATE SCHEMA content;
+CREATE EXTENSION "uuid-ossp";
+
+
+CREATE TABLE IF NOT EXISTS content.film_work(
+    id TEXT PRIMARY KEY,
+    title TEXT,
+    description TEXT,
+    rating FLOAT);
+
+CREATE TABLE IF NOT EXISTS content.film_work_person (
+    id uuid PRIMARY KEY,
+    film_work_id uuid NOT NULL,
+    person_id uuid,
+    role TEXT NOT NULL); #enum
+
+CREATE TABLE IF NOT EXISTS content.film_work_genre (
+    id uuid PRIMARY KEY,
+    film_work_id TEXT NOT NULL,
+    genre_id uuid);
+
+CREATE TABLE IF NOT EXISTS content.person (
+    id uuid PRIMARY KEY,
+	name TEXT NOT NULL);
+
+CREATE TABLE IF NOT EXISTS content.genre (
+    id uuid PRIMARY KEY,
+	name TEXT NOT NULL);
