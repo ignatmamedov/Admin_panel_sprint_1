@@ -1,20 +1,18 @@
+import os
 import psycopg2
 
 
 class PostgresDB:
 
-    def __init__(self):
-        pass
-
     @staticmethod
     def copy_db_from_csv(db_name):
         conn = psycopg2.connect(
-            dbname='postgres',
-            user='postgres',
-            host='localhost',
-            port=5432,
-            options=f'-c search_path=content',
-            password='postgres'
+            dbname=os.environ.get('DBNAME'),
+            user=os.environ.get('USER'),
+            host=os.environ.get('HOST'),
+            port=os.environ.get('PORT'),
+            options=os.environ.get('OPTIONS'),
+            password=os.environ.get('PASSWORD')
         )
         cur = conn.cursor()
         with open('{}.csv'.format(db_name), newline='', encoding='utf-8') as file:
@@ -23,3 +21,8 @@ class PostgresDB:
         conn.commit()
         cur.close()
         conn.close()
+
+
+
+
+
