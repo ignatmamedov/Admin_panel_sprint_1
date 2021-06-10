@@ -1,10 +1,21 @@
 from django.contrib import admin
-from .models import Genre, Person, Filmwork
+from .models import Genre, Person, Filmwork, User
 
 
-class PersonRoleInline(admin.TabularInline):
-    model = Person
+class PersonInline(admin.TabularInline):
+    model = Filmwork.persons.through
     extra = 0
+
+
+class GenreInline(admin.TabularInline):
+    model = Filmwork.genres.through
+    extra = 0
+
+
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('email', 'username', 'date_joined', 'is_staff')
+
 
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
@@ -13,8 +24,8 @@ class GenreAdmin(admin.ModelAdmin):
 
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
-    list_filter = ('type',)
-    list_display = ('type', 'name', 'last_name', 'film',)
+    list_filter = ('first_name', 'last_name')
+    list_display = ('first_name', 'last_name')
     pass
 
 
@@ -24,6 +35,7 @@ class FilmworkAdmin(admin.ModelAdmin):
     list_display = ('type', 'title', 'creation_date', 'age_rating',)
 
     inlines = [
-        PersonRoleInline
+        PersonInline,
+        GenreInline
     ]
-    pass
+

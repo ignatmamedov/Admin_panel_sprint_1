@@ -19,4 +19,5 @@ def main():
 
 
 if __name__ == '__main__':
+    os.environ['SECRET_KEY'] = '5bim(!=4f(8m=w6&k%sr)nptmap(cmterf5dojs$ogh)wg879s'
     main()

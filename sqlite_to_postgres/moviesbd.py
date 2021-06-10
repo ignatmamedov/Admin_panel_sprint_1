@@ -58,19 +58,20 @@ class MoviesDB:
             return [{"id": None, "name": None}]
 
     def make_writers_to_list(self, writers):
+
+        if not writers:
+            return None
+
         writers_list = []
         id_list = []
-        if writers:
-            for elem in json.loads(writers):
-                id_writer = elem.get("id")
-                if id_writer in id_list:
-                    continue
-                id_list.append(id_writer)
-                writer = self.send_request_to_bd(self.WRITER_NAME_SQL_REQUEST.format(id_writer))
-                elem = {"id": id_writer, "name": writer[0][0]}
-                writers_list.append(elem)
-        else:
-            return None
+        for elem in json.loads(writers):
+            id_writer = elem.get("id")
+            if id_writer in id_list:
+                continue
+            id_list.append(id_writer)
+            writer = self.send_request_to_bd(self.WRITER_NAME_SQL_REQUEST.format(id_writer))
+            elem = {"id": id_writer, "name": writer[0][0]}
+            writers_list.append(elem)
         return writers_list
 
     @staticmethod

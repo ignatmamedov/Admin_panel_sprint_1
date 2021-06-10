@@ -3,8 +3,55 @@ import uuid
 from dataclasses import dataclass, field, asdict
 
 
-class TransformDB:
+@dataclass
+class Person:
+    name: str
+    id: uuid.UUID = field(default_factory=uuid.uuid4)
 
+
+@dataclass
+class PersonRole:
+    film_work_id: uuid.UUID
+    name: str
+    role: str
+
+
+@dataclass
+class FilmWorkPerson:
+    film_work_id: uuid.UUID
+    person_id: uuid.UUID
+    role: str
+    id: uuid.UUID = field(default_factory=uuid.uuid4)
+
+
+@dataclass
+class GenreName:
+    film_work_id: uuid.UUID
+    name: str
+
+
+@dataclass
+class Genre:
+    name: str
+    id: uuid.UUID = field(default_factory=uuid.uuid4)
+
+
+@dataclass
+class FilmWorkGenre:
+    film_work_id: uuid.UUID
+    genre_id: uuid.UUID
+    id: uuid.UUID = field(default_factory=uuid.uuid4)
+
+
+@dataclass
+class FilmWork:
+    id: str
+    title: str
+    description: str
+    rating: float
+
+
+class TransformDB:
     def __init__(self,
                  film_work_list=None,
                  film_work_genre_list=None,
@@ -18,47 +65,6 @@ class TransformDB:
         self.genres_list = genres_list
         self.person_list = person_list
 
-    @dataclass
-    class Person:
-        name: str
-        id: uuid.UUID = field(default_factory=uuid.uuid4)
-
-    @dataclass
-    class PersonRole:
-        film_work_id: str
-        name: str
-        role: str
-
-    @dataclass
-    class FilmWorkPerson:
-        film_work_id: str
-        person_id: uuid.UUID
-        role: str
-        id: uuid.UUID = field(default_factory=uuid.uuid4)
-
-    @dataclass
-    class GenreName:
-        film_work_id: str
-        name: str
-
-    @dataclass
-    class Genre:
-        name: str
-        id: uuid.UUID = field(default_factory=uuid.uuid4)
-
-    @dataclass
-    class FilmWorkGenre:
-        film_work_id: str
-        genre_id: uuid.UUID
-        id: uuid.UUID = field(default_factory=uuid.uuid4)
-
-    @dataclass
-    class FilmWork:
-        id: str
-        title: str
-        description: str
-        rating: float
-
     def get_uuid(self, named_list):
         name_to_uuid = {}
         for name in named_list:
@@ -66,23 +72,23 @@ class TransformDB:
         return name_to_uuid
 
     def get_person_list(self, persons_list):
-        unique_persons = list(set([person.name for person in persons_list]))
-        self.person_list = [self.Person(person_name) for person_name in unique_persons]
+        unique_persons = set([person.name for person in persons_list])
+        self.person_list = [Person(person_name) for person_name in unique_persons]
         return self.person_list
 
     def get_film_work_person_list(self, persons_list):
         person_uuid = self.get_uuid(self.person_list)
-        self.film_work_person_list = [self.FilmWorkPerson(person.film_work_id, person_uuid.get(person.name), person.role) for person in persons_list]
+        self.film_work_person_list = [FilmWorkPerson(person.film_work_id, person_uuid.get(person.name), person.role) for person in persons_list]
         return self.film_work_person_list
 
     def get_genres_list(self, genres_list):
-        unique_genres = list(set([genre.name for genre in genres_list]))
-        self.genres_list = [self.Genre(genre_name) for genre_name in unique_genres]
+        unique_genres = set([genre.name for genre in genres_list])
+        self.genres_list = [Genre(genre_name) for genre_name in unique_genres]
         return self.genres_list
 
     def get_film_work_genre_list(self, genres_list):
         genre_uuid = self.get_uuid(self.genres_list)
-        self.film_work_genre_list = [self.FilmWorkGenre(genre.film_work_id, genre_uuid.get(genre.name)) for genre in genres_list]
+        self.film_work_genre_list = [FilmWorkGenre(genre.film_work_id, genre_uuid.get(genre.name)) for genre in genres_list]
         return self.film_work_genre_list
 
     def prep_for_migration(self, persons_role, genre_name, film_work_list):
