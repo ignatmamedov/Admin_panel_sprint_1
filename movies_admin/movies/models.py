@@ -34,8 +34,7 @@ class Genre(TimeStampedModel):
 
 class Person(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    type = models.CharField(_('тип'), max_length=20, choices=ProfessionType.choices)
-    name = models.CharField(_('имя'), max_length=255)
+    first_name = models.CharField(_('имя'), max_length=255)
     last_name = models.CharField(_('фамилия'), max_length=255)
 
     class Meta:
@@ -43,7 +42,7 @@ class Person(TimeStampedModel):
         verbose_name_plural = _('persons')
 
     def __str__(self):
-        return f'{self.name} {self.last_name}'
+        return f'{self.first_name} {self.last_name}'
 
 
 class Filmwork(TimeStampedModel):
@@ -53,9 +52,9 @@ class Filmwork(TimeStampedModel):
     description = models.TextField(_('содержание'), blank=True)
     creation_date = models.DateField(_('дата создания'), blank=True)
     age_rating = models.TextField(_('возрастной ценз'), blank=True)
-    genres = models.ManyToManyField(Genre)
+    genres = models.ManyToManyField(Genre, through='FilmworkGenre')
     link = models.URLField(_('ссылка на файл'), blank=True)
-    person = models.ManyToManyField(Person, blank=True)
+    persons = models.ManyToManyField(Person, through='FilmworkPerson')
 
     class Meta:
         verbose_name = _('кинопроизведение')
@@ -63,6 +62,19 @@ class Filmwork(TimeStampedModel):
 
     def __str__(self):
         return self.title
+
+
+class FilmworkPerson(TimeStampedModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    person_id = models.ForeignKey(Person, to_field='id', on_delete=models.CASCADE)
+    filmwork_id = models.ForeignKey(Filmwork, to_field='id', on_delete=models.CASCADE)
+    type = models.CharField(_('тип'), max_length=20, choices=ProfessionType.choices)
+
+
+class FilmworkGenre(TimeStampedModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    genre_id = models.ForeignKey(Genre, to_field='id', on_delete=models.CASCADE)
+    filmwork_id = models.ForeignKey(Filmwork, to_field='id', on_delete=models.CASCADE)
 
 
 class User(AbstractBaseUser, PermissionsMixin):

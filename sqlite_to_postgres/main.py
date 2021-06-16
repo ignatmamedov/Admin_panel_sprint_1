@@ -5,7 +5,7 @@ from moviesbd import MoviesDB
 from transformdb import TransformDB, PersonRole, GenreName, FilmWork
 from postgresdb import PostgresDB
 
-FINAL_DBS = ['film_work_person', 'film_work_genre', 'film_work', 'person', 'genre']
+FINAL_DBS = ['person', 'genre', 'film_work', 'film_work_person', 'film_work_genre']
 PERSONS_ROLE = []
 GENRE_NAME = []
 FILM_WORK = []
@@ -41,4 +41,11 @@ def run():
 
 
 if __name__ == '__main__':
+    os.environ['DB_NAME'] = 'postgres'
+    os.environ['DB_USER'] = 'postgres'
+    os.environ['DB_HOST'] = 'localhost'
+    os.environ['DB_PORT'] = '5432'
+    os.environ['DB_OPTIONS'] = '-c search_path=content'
+    os.environ['DB_PASSWORD'] = 'postgres'
+    os.environ['DB_SECRET_KEY'] = '5bim(!=4f(8m=w6&k%sr)nptmap(cmterf5dojs$ogh)wg879s'
     run()

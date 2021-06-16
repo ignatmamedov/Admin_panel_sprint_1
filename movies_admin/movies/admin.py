@@ -3,7 +3,7 @@ from .models import Genre, Person, Filmwork, User
 
 
 class PersonInline(admin.TabularInline):
-    model = Filmwork.person.through
+    model = Filmwork.persons.through
     extra = 0
 
 
@@ -24,8 +24,8 @@ class GenreAdmin(admin.ModelAdmin):
 
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
-    list_filter = ('type',)
-    list_display = ('type', 'name', 'last_name')
+    list_filter = ('first_name', 'last_name')
+    list_display = ('first_name', 'last_name')
     pass
 
 

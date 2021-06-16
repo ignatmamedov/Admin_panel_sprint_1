@@ -72,7 +72,7 @@ class TransformDB:
         return name_to_uuid
 
     def get_person_list(self, persons_list):
-        unique_persons = list(set([person.name for person in persons_list]))
+        unique_persons = set([person.name for person in persons_list])
         self.person_list = [Person(person_name) for person_name in unique_persons]
         return self.person_list
 
@@ -82,7 +82,7 @@ class TransformDB:
         return self.film_work_person_list
 
     def get_genres_list(self, genres_list):
-        unique_genres = list(set([genre.name for genre in genres_list]))
+        unique_genres = set([genre.name for genre in genres_list])
         self.genres_list = [Genre(genre_name) for genre_name in unique_genres]
         return self.genres_list
 
